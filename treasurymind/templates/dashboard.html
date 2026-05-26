@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TreasuryMind — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-icon"><span>T</span></div>
+        <div class="logo-text">
+            <div class="logo-name">TreasuryAI</div>
+            <div class="logo-sub">RECONCILIATION AGENT</div>
+        </div>
+    </div>
+    <nav class="nav">
+        <a href="#" class="nav-item active" data-page="command">
+            <span class="nav-dot"></span>Command Center</a>
+        <a href="#" class="nav-item" data-page="intake">
+            <span class="nav-dot"></span>Document Intake</a>
+        <a href="#" class="nav-item" data-page="recon">
+            <span class="nav-dot"></span>Reconciliation</a>
+        <a href="#" class="nav-item" data-page="invoices">
+            <span class="nav-dot"></span>Invoice Generator</a>
+        <a href="#" class="nav-item" data-page="copilot">
+            <span class="nav-dot"></span>Treasury Copilot</a>
+        <a href="#" class="nav-item" data-page="review">
+            <span class="nav-dot"></span>Review Queue</a>
+        <a href="#" class="nav-item" data-page="fraud">
+            <span class="nav-dot"></span>Fraud & Anomaly</a>
+        <a href="#" class="nav-item" data-page="analytics">
+            <span class="nav-dot"></span>Analytics</a>
+        <a href="#" class="nav-item" data-page="multibiz">
+            <span class="nav-dot"></span>Multi-Business</a>
+        <a href="#" class="nav-item" data-page="messaging">
+            <span class="nav-dot"></span>WhatsApp & Telegram</a>
+        <a href="#" class="nav-item" data-page="vault">
+            <span class="nav-dot"></span>Document Vault</a>
+        <a href="#" class="nav-item" data-page="reports">
+            <span class="nav-dot"></span>Reports</a>
+        <a href="#" class="nav-item" data-page="audit">
+            <span class="nav-dot"></span>Audit Log</a>
+    </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <h1 class="page-title">Command Center</h1>
+            <p class="page-sub">Live treasury operations · all currencies</p>
+        </div>
+        <div class="topbar-right">
+            <select id="langSelector" onchange="switchLanguage(this.value)" style="padding:0.4rem 0.7rem;background:#131d2f;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#e6edf3;font-size:0.75rem;cursor:pointer;">
+                <option value="en">🇬🇧 English</option>
+                <option value="ms">🇲🇾 Bahasa Malaysia</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ta">🇮🇳 தமிழ்</option>
+            </select>
+            <div class="search-box">
+                <input type="text" placeholder="Search invoices, txns, counterpa...">
+                <span class="search-key">⌘ K</span>
+            </div>
+            <div class="topbar-icons">
+                <button class="icon-btn" id="bellBtn" onclick="toggleNotifications()" title="Notifications" style="position:relative;">🔔<span id="alertBadge" style="position:absolute;top:-4px;right:-4px;background:#f85149;color:#fff;font-size:0.5rem;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">0</span></button>
+            </div>
+            <div id="notifDropdown" style="display:none;position:absolute;top:60px;right:120px;width:320px;background:#131d2f;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1rem;z-index:100;max-height:300px;overflow-y:auto;">
+                <div style="font-weight:600;color:#fff;font-size:0.85rem;margin-bottom:0.75rem;">Notifications</div>
+                <div id="notifList"><p style="color:#8b949e;font-size:0.78rem;">No alerts yet. Run reconciliation to generate.</p></div>
+            </div>
+            <div class="user-badge">
+                <div class="user-avatar">{{ user[:2]|upper }}</div>
+                <div class="user-info">
+                    <div class="user-name">{{ user }}</div>
+                    <div class="user-role">Treasury Lead</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- METRICS -->
+    <section id="page-command" class="page-section">
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">Transactions</span>
+                <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
+            <div class="mc-value">1,247</div>
+            <div class="mc-delta up">↗ +8.2%</div>
+        </div>
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">Reconciled</span>
+                <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div></div>
+            <div class="mc-value">1,089</div>
+            <div class="mc-delta up">↗ +4.1%</div>
+        </div>
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">Pending Review</span>
+                <div class="mc-icon red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg></div></div>
+            <div class="mc-value">124</div>
+            <div class="mc-delta down">↘ -12%</div>
+        </div>
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">FX Differences</span>
+                <div class="mc-icon yellow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
+            <div class="mc-value">$28,450</div>
+            <div class="mc-delta warn">↗ +2.4%</div>
+        </div>
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">Suspicious</span>
+                <div class="mc-icon red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
+            <div class="mc-value">14</div>
+            <div class="mc-delta down">↗ +3</div>
+        </div>
+        <div class="metric-card">
+            <div class="mc-top"><span class="mc-label">Cash Flow</span>
+                <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
+            <div class="mc-value">$8,420,000</div>
+            <div class="mc-delta up">↗ +11.6%</div>
+        </div>
+    </div><!-- end metrics -->
+
+    <!-- CHARTS ROW -->
+    <section class="grid-2-1">
+        <div class="card">
+            <div class="card-title">Reconciliation Trends</div>
+            <div class="card-sub">Last 7 days</div>
+            <canvas id="trendChart" height="200"></canvas>
+        </div>
+        <div class="card">
+            <div class="card-title">Currency Distribution</div>
+            <div class="card-sub">By volume</div>
+            <canvas id="currencyChart" height="200"></canvas>
+        </div>
+    </section>
+
+    <!-- FX + PAYMENT STATUS -->
+    <section class="grid-1-1">
+        <div class="card">
+            <div class="card-title">FX Exposure</div>
+            <div class="card-sub">USD equivalent by currency</div>
+            <canvas id="fxChart" height="180"></canvas>
+        </div>
+        <div class="card">
+            <div class="card-title">Payment Status</div>
+            <div class="card-sub">Today's breakdown</div>
+            <div class="status-bars">
+                <div class="status-row"><span>Auto Matched</span><span class="status-val">1089 · 87%</span></div>
+                <div class="status-bar"><div class="status-fill green" style="width:87%"></div></div>
+                <div class="status-row"><span>Partial Match</span><span class="status-val">182 · 8%</span></div>
+                <div class="status-bar"><div class="status-fill yellow" style="width:8%"></div></div>
+                <div class="status-row"><span>Needs Review</span><span class="status-val">42 · 4%</span></div>
+                <div class="status-bar"><div class="status-fill blue" style="width:4%"></div></div>
+                <div class="status-row"><span>Fraud Risk</span><span class="status-val">14 · 1%</span></div>
+                <div class="status-bar"><div class="status-fill red" style="width:1.5%"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRANSACTIONS + AI -->
+    <section class="grid-2-1">
+        <div class="card">
+            <div class="card-header-row">
+                <div><div class="card-title">Recent Transactions</div><div class="card-sub">Latest AI-processed payments</div></div>
+                <a href="#" class="link-green">Open reconciliation →</a>
+            </div>
+            <table class="txn-table">
+                <thead><tr><th>Transaction</th><th>Counterparty</th><th>Amount</th><th>Confidence</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td><div class="t-primary">TXN-10241</div><div class="t-sub">INV-2025-0421</div></td>
+                        <td><div class="t-primary">Acme Industries (US)</div><div class="t-sub">→ Pacific Holdings (MY)</div></td>
+                        <td><div class="t-amount">42.5 <span class="t-cur">MYR</span></div><div class="t-sub">exp 10 USD</div></td>
+                        <td><div class="conf-bar"><div class="conf-fill green" style="width:94%"></div></div><span class="conf-pct">94%</span></td>
+                        <td><span class="badge badge-green">Auto Matched</span></td></tr>
+                    <tr><td><div class="t-primary">TXN-10242</div><div class="t-sub">INV-2025-0422</div></td>
+                        <td><div class="t-primary">Tanaka Trading Co (JP)</div><div class="t-sub">→ Nordic Components (SE)</div></td>
+                        <td><div class="t-amount">12,410 <span class="t-cur">EUR</span></div><div class="t-sub">exp 12,500 EUR</div></td>
+                        <td><div class="conf-bar"><div class="conf-fill green" style="width:88%"></div></div><span class="conf-pct">88%</span></td>
+                        <td><span class="badge badge-yellow">Partial Match</span></td></tr>
+                    <tr><td><div class="t-primary">TXN-10243</div><div class="t-sub">INV-2025-0419</div></td>
+                        <td><div class="t-primary">Mumbai Textiles (IN)</div><div class="t-sub">→ Lyon Fashion House (FR)</div></td>
+                        <td><div class="t-amount">7,920 <span class="t-cur">EUR</span></div><div class="t-sub">exp 8,500 EUR</div></td>
+                        <td><div class="conf-bar"><div class="conf-fill red" style="width:62%"></div></div><span class="conf-pct">62%</span></td>
+                        <td><span class="badge badge-orange">Needs Review</span></td></tr>
+                    <tr><td><div class="t-primary">TXN-10244</div><div class="t-sub">INV-2025-0418</div></td>
+                        <td><div class="t-primary">Unknown wire</div><div class="t-sub">→ Pacific Holdings (MY)</div></td>
+                        <td><div class="t-amount">24,800 <span class="t-cur">USD</span></div><div class="t-sub">exp 0 USD</div></td>
+                        <td><div class="conf-bar"><div class="conf-fill red" style="width:21%"></div></div><span class="conf-pct">21%</span></td>
+                        <td><span class="badge badge-red">Fraud Risk</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card ai-card">
+            <div class="ai-header"><div class="ai-dot"></div><span class="ai-label">AI Insight</span><span class="ai-time">Updated 2 min ago</span></div>
+            <p class="ai-text">Reconciliation rate up <span class="highlight-green">+4.1%</span> this week. MYR settlements show recurring <span class="highlight-red">MYR 0.70</span> intermediary fee from CIMB → Maybank corridor. Consider whitelisting this fee pattern to lift auto-match by ~6%.</p>
+            <a href="#" class="link-green">Ask Treasury Copilot →</a>
+        </div>
+    </section>
+    </section><!-- end page-command -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="/static/charts.js"></script>
+<script src="/static/nav.js"></script>
+
+<!-- OTHER PAGES (hidden by default) -->
+<section id="page-intake" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-title">Upload Documents</div>
+        <div class="card-sub">Upload receipts/invoices and bank statements for AI processing</div>
+        <form id="uploadForm" enctype="multipart/form-data" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <div>
+                <label style="display:block;color:#8b949e;font-size:0.72rem;text-transform:uppercase;margin-bottom:0.5rem;">Receipts / Invoices (PNG, JPG, PDF)</label>
+                <input type="file" name="receipts" multiple accept=".png,.jpg,.jpeg,.pdf" style="width:100%;padding:1rem;background:#0b1120;border:2px dashed rgba(6,214,160,0.2);border-radius:12px;color:#e6edf3;">
+            </div>
+            <div>
+                <label style="display:block;color:#8b949e;font-size:0.72rem;text-transform:uppercase;margin-bottom:0.5rem;">Bank Statement (XLSX, CSV)</label>
+                <input type="file" name="bank_statement" accept=".xlsx,.xls,.csv" style="width:100%;padding:1rem;background:#0b1120;border:2px dashed rgba(6,214,160,0.2);border-radius:12px;color:#e6edf3;">
+            </div>
+        </form>
+        <div style="margin-top:1.5rem;">
+            <select id="bankSelect" style="padding:0.6rem 1rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#e6edf3;margin-right:1rem;">
+                <option value="auto">Auto-detect Bank</option>
+                <option value="maybank">Maybank</option>
+                <option value="cimb">CIMB</option>
+                <option value="rhb">RHB</option>
+                <option value="public_bank">Public Bank</option>
+            </select>
+            <button onclick="runReconciliation()" style="padding:0.7rem 2rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Run Reconciliation</button>
+        </div>
+        <div id="uploadStatus" style="margin-top:1rem;color:#8b949e;font-size:0.82rem;"></div>
+    </div>
+</section>
+
+<section id="page-recon" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="card-title">Reconciliation Results</div><div class="card-sub">Formula: expectedAmount = invoiceAmount × fxRate | fxVariance = receivedAmount - expectedAmount</div></div>
+            <button onclick="loadResults()" style="padding:0.5rem 1.2rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.78rem;">Refresh Results</button>
+        </div>
+    </div>
+    <div id="reconResults">
+        <div class="card"><p style="color:#8b949e;">Run reconciliation from Document Intake to see results here.</p></div>
+    </div>
+</section>
+
+<section id="page-copilot" class="page-section" style="display:none;">
+    <div class="card" style="height:calc(100vh - 200px);display:flex;flex-direction:column;">
+        <div class="card-title">Treasury Copilot</div>
+        <div class="card-sub">Ask about payments, cash flow, or invoices — in any language. Attach images or files for instant analysis.</div>
+        <div id="chatMessages" style="flex:1;overflow-y:auto;margin-bottom:1rem;padding:1rem 0;"></div>
+        <div style="display:flex;gap:0.75rem;align-items:center;">
+            <label for="chatFile" style="cursor:pointer;padding:0.6rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;align-items:center;" title="Attach file or image">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </label>
+            <input type="file" id="chatFile" accept=".png,.jpg,.jpeg,.pdf,.xlsx,.xls,.csv" style="display:none;" onchange="handleFileAttach(this)">
+            <div id="filePreview" style="display:none;background:rgba(6,214,160,0.08);border:1px solid rgba(6,214,160,0.2);border-radius:8px;padding:0.3rem 0.7rem;font-size:0.72rem;color:#06d6a0;display:flex;align-items:center;gap:0.4rem;">
+                <span id="fileName"></span>
+                <span onclick="clearFile()" style="cursor:pointer;color:#f85149;">✕</span>
+            </div>
+            <input type="text" id="chatInput" placeholder="Ask Treasury Copilot..." style="flex:1;padding:0.7rem 1rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;outline:none;" onkeypress="if(event.key==='Enter')sendChat()">
+            <button onclick="sendChat()" style="padding:0.7rem 1.5rem;background:#06d6a0;color:#0b1120;border:none;border-radius:10px;font-weight:600;cursor:pointer;">Send</button>
+        </div>
+    </div>
+</section>
+
+<section id="page-review" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">Review Queue</div>
+        <div class="card-sub">Transactions requiring manual review or approval</div>
+    </div>
+    <div id="reviewContent"><div class="card"><p style="color:#8b949e;">Loading...</p></div></div>
+</section>
+
+<section id="page-fraud" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="card-title">Fraud & Anomaly Detection</div><div class="card-sub">AI-powered predictive alerts with escalation</div></div>
+            <button onclick="loadAlerts()" style="padding:0.5rem 1rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.78rem;">Run Analysis</button>
+        </div>
+    </div>
+    <div id="alertsContent"><div class="card"><p style="color:#8b949e;">Click "Run Analysis" to detect anomalies.</p></div></div>
+</section>
+
+<section id="page-analytics" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">Treasury Analytics</div>
+        <div class="card-sub">Cash flow, exposure, settlement performance, client risk</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+        <div class="card">
+            <div class="card-title">Client Risk Profiles</div>
+            <div class="card-sub">AI-scored risk assessment per counterparty</div>
+            <div id="riskProfiles"><p style="color:#8b949e;">Run reconciliation to generate profiles.</p></div>
+            <button onclick="loadRiskProfiles()" style="margin-top:1rem;padding:0.5rem 1rem;background:rgba(6,214,160,0.1);color:#06d6a0;border:1px solid rgba(6,214,160,0.2);border-radius:8px;font-weight:500;cursor:pointer;font-size:0.75rem;">Load Profiles</button>
+        </div>
+        <div class="card">
+            <div class="card-title">Multi-Currency Exposure</div>
+            <div class="card-sub">Consolidated treasury view across currencies</div>
+            <div id="currencyExposure"><p style="color:#8b949e;">Upload data to see exposure.</p></div>
+            <button onclick="loadExposure()" style="margin-top:1rem;padding:0.5rem 1rem;background:rgba(6,214,160,0.1);color:#06d6a0;border:1px solid rgba(6,214,160,0.2);border-radius:8px;font-weight:500;cursor:pointer;font-size:0.75rem;">Load Exposure</button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title">Automated Reports</div>
+        <div class="card-sub">Generate on-demand or schedule recurring reports</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1rem;" id="reportButtons"></div>
+    </div>
+</section>
+
+<!-- INVOICE GENERATOR -->
+<section id="page-invoices" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">AI Invoice Generator</div>
+        <div class="card-sub">Create professional invoices in multiple currencies with AI-suggested terms</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:1rem;">New Invoice</div>
+            <form id="invoiceForm">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+                    <div><label style="display:block;color:#8b949e;font-size:0.68rem;text-transform:uppercase;margin-bottom:0.3rem;">Client Name</label>
+                        <input type="text" id="invClient" value="Acme Corp" style="width:100%;padding:0.55rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;"></div>
+                    <div><label style="display:block;color:#8b949e;font-size:0.68rem;text-transform:uppercase;margin-bottom:0.3rem;">Email</label>
+                        <input type="email" id="invEmail" value="billing@acme.com" style="width:100%;padding:0.55rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;"></div>
+                    <div><label style="display:block;color:#8b949e;font-size:0.68rem;text-transform:uppercase;margin-bottom:0.3rem;">Currency</label>
+                        <select id="invCurrency" style="width:100%;padding:0.55rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;">
+                            <option>MYR</option><option>USD</option><option>EUR</option><option>GBP</option><option>SGD</option></select></div>
+                    <div><label style="display:block;color:#8b949e;font-size:0.68rem;text-transform:uppercase;margin-bottom:0.3rem;">Due (days)</label>
+                        <input type="number" id="invDays" value="30" style="width:100%;padding:0.55rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;"></div>
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;color:#8b949e;font-size:0.68rem;text-transform:uppercase;margin-bottom:0.3rem;">Items (description | qty | amount — one per line)</label>
+                    <textarea id="invItems" rows="4" placeholder="Web Development | 1 | 2500&#10;Hosting | 12 | 50" style="width:100%;padding:0.55rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;resize:vertical;"></textarea>
+                </div>
+                <button type="button" onclick="createInvoice()" style="padding:0.6rem 1.5rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Generate Invoice</button>
+            </form>
+        </div>
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">Invoice Lifecycle</div>
+            <div id="invoiceList"><p style="color:#8b949e;font-size:0.78rem;">No invoices yet. Create one to see the lifecycle.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- MULTI-BUSINESS -->
+<section id="page-multibiz" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">Multi-Business Treasury View</div>
+        <div class="card-sub">Consolidated portfolio across all business entities and currencies</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
+        <div class="metric-card"><div class="mc-label">Total Portfolio</div><div class="mc-value" id="portfolioTotal">RM 0</div><div class="mc-delta" style="color:#8b949e;">All entities combined</div></div>
+        <div class="metric-card"><div class="mc-label">Business Entities</div><div class="mc-value" id="bizCount">0</div><div class="mc-delta" style="color:#8b949e;">Registered</div></div>
+        <div class="metric-card"><div class="mc-label">Currencies Active</div><div class="mc-value" id="curCount">0</div><div class="mc-delta" style="color:#8b949e;">Across portfolio</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.75rem;">Add Business Entity</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+                <input type="text" id="bizName" placeholder="Business name" style="padding:0.5rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;">
+                <select id="bizCurrency" style="padding:0.5rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;">
+                    <option>MYR</option><option>USD</option><option>SGD</option><option>EUR</option></select>
+            </div>
+            <button onclick="addBusiness()" style="padding:0.5rem 1rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.78rem;">Add Entity</button>
+            <div id="bizList" style="margin-top:1rem;"></div>
+        </div>
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.75rem;">Currency Exposure</div>
+            <div id="multiBizExposure"><p style="color:#8b949e;font-size:0.78rem;">Add businesses to see consolidated exposure.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- WHATSAPP & TELEGRAM -->
+<section id="page-messaging" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">WhatsApp & Telegram Finance Assistant</div>
+        <div class="card-sub">SME owners can send receipts and queries via messaging apps</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">Telegram Bot</div>
+            <div style="color:#8b949e;font-size:0.78rem;margin-bottom:1rem;">Active at <span style="color:#06d6a0;font-weight:500;">@treasurymind_ai_bot</span></div>
+            <div style="background:#0b1120;border-radius:10px;padding:1rem;margin-bottom:1rem;">
+                <div style="color:#8b949e;font-size:0.7rem;margin-bottom:0.5rem;">Supported commands:</div>
+                <div style="color:#e6edf3;font-size:0.78rem;line-height:2;">
+                    <code>/start</code> — Welcome & setup<br>
+                    <code>/status</code> — Reconciliation status<br>
+                    <code>/balance</code> — Cash flow summary<br>
+                    <code>/alerts</code> — Active alerts<br>
+                    <code>/report</code> — Generate daily report<br>
+                    <code>/risk [client]</code> — Client risk score<br>
+                    <code>📸 Photo</code> — Receipt OCR + reconciliation<br>
+                    <code>📄 Document</code> — Invoice/statement processing
+                </div>
+            </div>
+            <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">Simulate Message</div>
+            <div style="display:flex;gap:0.5rem;">
+                <input type="text" id="simMsg" placeholder="Type a message..." style="flex:1;padding:0.5rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;">
+                <button onclick="simulateTelegram()" style="padding:0.5rem 1rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Send</button>
+            </div>
+            <div id="simResult" style="margin-top:0.75rem;"></div>
+        </div>
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">WhatsApp Integration</div>
+            <div style="color:#8b949e;font-size:0.78rem;margin-bottom:1rem;">Forward receipts via WhatsApp for instant reconciliation</div>
+            <div style="background:#0b1120;border-radius:10px;padding:1rem;">
+                <div style="color:#e6edf3;font-size:0.82rem;line-height:1.8;">
+                    <strong>How it works:</strong><br>
+                    1. Send receipt photo to TreasuryMind WhatsApp<br>
+                    2. AI extracts payment data (OCR)<br>
+                    3. Auto-matches against invoices<br>
+                    4. Replies with result in seconds<br><br>
+                    <strong>Supported languages:</strong><br>
+                    English, Bahasa Malaysia, 中文, தமிழ்
+                </div>
+            </div>
+            <div style="margin-top:1rem;padding:0.75rem;background:rgba(6,214,160,0.06);border:1px solid rgba(6,214,160,0.15);border-radius:8px;">
+                <div style="color:#06d6a0;font-size:0.75rem;font-weight:600;">Multilingual AI</div>
+                <div style="color:#b1bac4;font-size:0.72rem;margin-top:0.2rem;">Bot auto-detects language and responds in the same language. Supports BM, EN, Mandarin, Tamil.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DOCUMENT VAULT -->
+<section id="page-vault" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="card-title">Secure Document Vault</div><div class="card-sub">Encrypted storage with SHA-256 integrity verification</div></div>
+            <div id="vaultStats" style="color:#8b949e;font-size:0.75rem;"></div>
+        </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.75rem;">Upload to Vault</div>
+            <input type="file" id="vaultFile" style="width:100%;padding:1rem;background:#0b1120;border:2px dashed rgba(6,214,160,0.2);border-radius:12px;color:#e6edf3;margin-bottom:0.75rem;">
+            <select id="vaultType" style="padding:0.5rem 0.75rem;background:#0b1120;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;margin-right:0.5rem;">
+                <option value="receipt">Receipt</option><option value="invoice">Invoice</option>
+                <option value="bank_statement">Bank Statement</option><option value="report">Report</option>
+                <option value="contract">Contract</option></select>
+            <button onclick="uploadToVault()" style="padding:0.5rem 1rem;background:#06d6a0;color:#0b1120;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Store Securely</button>
+            <div id="vaultUploadStatus" style="margin-top:0.5rem;color:#8b949e;font-size:0.75rem;"></div>
+        </div>
+        <div class="card">
+            <div style="font-weight:600;color:#fff;margin-bottom:0.75rem;">Stored Documents</div>
+            <div id="vaultDocList"><p style="color:#8b949e;font-size:0.78rem;">No documents stored yet.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- REPORTS -->
+<section id="page-reports" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div class="card-title">Automated Report Scheduler</div>
+        <div class="card-sub">Generate on-demand or schedule recurring financial reports</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;" id="reportGrid"></div>
+    <div id="reportOutput"></div>
+</section>
+
+<section id="page-audit" class="page-section" style="display:none;">
+    <div class="card" style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="card-title">Blockchain Audit Log</div><div class="card-sub">Immutable on-chain record — Polygon testnet</div></div>
+            <div><span style="color:#06d6a0;font-size:0.72rem;font-weight:500;">Document Vault: </span><span id="vaultCount" style="color:#fff;font-size:0.72rem;">0 files</span></div>
+        </div>
+    </div>
+    <div id="auditContent"><div class="card"><p style="color:#8b949e;">Audit trail populates after reconciliation.</p></div></div>
+</section>
+
+<script>
+function runReconciliation() {
+    const form = document.getElementById('uploadForm');
+    const formData = new FormData(form);
+    const status = document.getElementById('uploadStatus');
+    status.innerHTML = '<span style="color:#06d6a0;">Processing...</span>';
+
+    fetch('/api/reconcile', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const k = data.kpis;
+                status.innerHTML = `<span style="color:#06d6a0;">✓ Complete! ${k.transactions} transactions processed. ${k.reconciled} reconciled, ${k.pending_review} pending, ${k.suspicious} suspicious.</span>`;
+                // Update command center metrics
+                const vals = document.querySelectorAll('.mc-value');
+                if (vals.length >= 6) {
+                    vals[0].textContent = k.transactions.toLocaleString();
+                    vals[1].textContent = k.reconciled.toLocaleString();
+                    vals[2].textContent = k.pending_review.toLocaleString();
+                    vals[3].textContent = '$' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:0});
+                    vals[4].textContent = k.suspicious.toLocaleString();
+                    vals[5].textContent = '$' + k.cash_flow.toLocaleString(undefined,{maximumFractionDigits:0});
+                }
+                // Update notifications
+                updateNotifications(k);
+                // Auto-load results on recon page
+                renderReport(data);
+            } else {
+                status.innerHTML = '<span style="color:#f85149;">Error processing files.</span>';
+            }
+        })
+        .catch(e => { status.innerHTML = '<span style="color:#f85149;">Error: ' + e.message + '</span>'; });
+}
+
+function loadResults() {
+    fetch('/api/results').then(r => r.json()).then(data => {
+        if (data.success) renderReport(data);
+        else document.getElementById('reconResults').innerHTML = '<div class="card"><p style="color:#8b949e;">No results yet. Upload documents in Document Intake first.</p></div>';
+    });
+}
+
+function renderReport(data) {
+    const k = data.kpis;
+    const results = data.results || [];
+    let html = '';
+
+    // KPI Summary Cards
+    html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem;margin-bottom:1.25rem;">
+        <div class="metric-card"><div class="mc-label">Transactions</div><div class="mc-value">${k.transactions}</div><div class="mc-delta" style="color:#8b949e;">count(all)</div></div>
+        <div class="metric-card"><div class="mc-label">Reconciled</div><div class="mc-value" style="color:#06d6a0;">${k.reconciled}</div><div class="mc-delta up">status = RECONCILED</div></div>
+        <div class="metric-card"><div class="mc-label">Pending Review</div><div class="mc-value" style="color:#d29922;">${k.pending_review}</div><div class="mc-delta warn">status = PENDING</div></div>
+        <div class="metric-card"><div class="mc-label">Suspicious</div><div class="mc-value" style="color:#f85149;">${k.suspicious}</div><div class="mc-delta down">status = SUSPICIOUS</div></div>
+        <div class="metric-card"><div class="mc-label">Processing</div><div class="mc-value">${k.processing}</div><div class="mc-delta" style="color:#8b949e;">status = PROCESSING</div></div>
+    </div>`;
+
+    // FX Variance + Cash Flow
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+        <div class="metric-card"><div class="mc-label">FX Variance (Total)</div><div class="mc-value">RM ${Math.abs(k.fx_variance).toFixed(2)}</div><div class="mc-delta" style="color:#d29922;">sum(all fxVariance)</div></div>
+        <div class="metric-card"><div class="mc-label">Cash Flow</div><div class="mc-value" style="color:#06d6a0;">RM ${k.cash_flow.toFixed(2)}</div><div class="mc-delta up">sum(receivedAmount)</div></div>
+        <div class="metric-card" style="display:flex;align-items:center;justify-content:center;">
+            <a href="/api/download-report" style="padding:0.7rem 1.5rem;background:#06d6a0;color:#0b1120;border-radius:8px;font-weight:600;text-decoration:none;font-size:0.82rem;">Download Report (Excel)</a>
+        </div>
+    </div>`;
+
+    // Results Table
+    if (results.length > 0) {
+        html += `<div class="card"><div class="card-title">Transaction Details</div><div class="card-sub">expectedAmount = invoiceAmount × fxRate | fxVariance = receivedAmount - expectedAmount</div>
+        <table class="txn-table"><thead><tr><th>Invoice</th><th>Payer</th><th>Expected (MYR)</th><th>Received (MYR)</th><th>FX Variance</th><th>Confidence</th><th>Status</th></tr></thead><tbody>`;
+
+        results.forEach(r => {
+            const statusClass = r.status === 'RECONCILED' ? 'badge-green' :
+                               r.status === 'PENDING' ? 'badge-yellow' :
+                               r.status === 'SUSPICIOUS' ? 'badge-red' : 'badge-orange';
+            const varColor = Math.abs(r.fx_variance) < 5 ? '#06d6a0' : Math.abs(r.fx_variance) < 50 ? '#d29922' : '#f85149';
+            const confColor = r.confidence >= 0.9 ? '#06d6a0' : r.confidence >= 0.7 ? '#d29922' : '#f85149';
+            const confPct = (r.confidence * 100).toFixed(0);
+
+            html += `<tr>
+                <td><div class="t-primary">${r.invoice_ref}</div></td>
+                <td><div class="t-primary">${r.payer}</div><div class="t-sub">${r.currency} @ ${r.fx_rate.toFixed(4)}</div></td>
+                <td><div class="t-amount">${r.expected.toFixed(2)}</div></td>
+                <td><div class="t-amount">${r.received.toFixed(2)}</div></td>
+                <td><span style="color:${varColor};font-weight:600;">${r.fx_variance >= 0 ? '+' : ''}${r.fx_variance.toFixed(2)}</span></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:${confPct}%;background:${confColor};"></div></div><span class="conf-pct">${confPct}%</span></td>
+                <td><span class="badge ${statusClass}">${r.status}</span></td>
+            </tr>`;
+        });
+
+        html += '</tbody></table></div>';
+
+        // Explanations
+        html += '<div class="card" style="margin-top:1rem;"><div class="card-title">AI Explanations</div><div class="card-sub">Reasoning for each classification</div>';
+        results.forEach(r => {
+            const borderColor = r.status === 'RECONCILED' ? '#06d6a0' : r.status === 'PENDING' ? '#d29922' : '#f85149';
+            html += `<div style="border-left:3px solid ${borderColor};padding:0.6rem 1rem;margin-bottom:0.5rem;background:rgba(255,255,255,0.02);border-radius:0 8px 8px 0;">
+                <span style="color:#fff;font-weight:500;font-size:0.8rem;">${r.invoice_ref}</span>
+                <span style="color:#8b949e;font-size:0.75rem;margin-left:0.5rem;">${r.explanation}</span></div>`;
+        });
+        html += '</div>';
+    }
+
+    document.getElementById('reconResults').innerHTML = html;
+}
+
+function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    const fileInput = document.getElementById('chatFile');
+    const file = fileInput.files[0];
+
+    if (!msg && !file) return;
+
+    const messages = document.getElementById('chatMessages');
+
+    // Show user message
+    let userHtml = '';
+    if (file) {
+        const isImage = file.type.startsWith('image/');
+        if (isImage) {
+            const url = URL.createObjectURL(file);
+            userHtml += `<div style="margin-bottom:0.5rem;text-align:right;"><img src="${url}" style="max-width:200px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);"></div>`;
+        } else {
+            userHtml += `<div style="margin-bottom:0.5rem;text-align:right;"><span style="background:rgba(6,214,160,0.08);color:#06d6a0;padding:0.4rem 0.8rem;border-radius:8px;font-size:0.75rem;">📎 ${file.name}</span></div>`;
+        }
+    }
+    if (msg) {
+        userHtml += `<div style="margin-bottom:1rem;text-align:right;"><span style="background:rgba(6,214,160,0.12);color:#06d6a0;padding:0.5rem 1rem;border-radius:10px;font-size:0.82rem;">${msg}</span></div>`;
+    }
+    messages.innerHTML += userHtml;
+    input.value = '';
+
+    // Send with file if attached
+    if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('message', msg || 'Analyze this file');
+
+        messages.innerHTML += `<div style="margin-bottom:0.5rem;"><span style="color:#8b949e;font-size:0.75rem;">Analyzing file...</span></div>`;
+
+        fetch('/api/chat-with-file', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                messages.lastElementChild.remove(); // Remove "Analyzing..."
+                messages.innerHTML += `<div style="margin-bottom:1rem;"><span style="background:#131d2f;border:1px solid rgba(255,255,255,0.05);color:#e6edf3;padding:0.75rem 1rem;border-radius:10px;font-size:0.82rem;display:inline-block;max-width:85%;line-height:1.6;">${data.response}</span></div>`;
+                messages.scrollTop = messages.scrollHeight;
+            });
+        clearFile();
+    } else {
+        fetch('/api/chat', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({message: msg}) })
+            .then(r => r.json())
+            .then(data => {
+                messages.innerHTML += `<div style="margin-bottom:1rem;"><span style="background:#131d2f;border:1px solid rgba(255,255,255,0.05);color:#e6edf3;padding:0.75rem 1rem;border-radius:10px;font-size:0.82rem;display:inline-block;max-width:85%;line-height:1.6;">${data.response}</span></div>`;
+                messages.scrollTop = messages.scrollHeight;
+            });
+    }
+}
+
+function handleFileAttach(input) {
+    if (input.files[0]) {
+        document.getElementById('filePreview').style.display = 'flex';
+        document.getElementById('fileName').textContent = input.files[0].name;
+    }
+}
+
+function clearFile() {
+    document.getElementById('chatFile').value = '';
+    document.getElementById('filePreview').style.display = 'none';
+}
+
+// === VOICE INPUT (Web Speech API) ===
+function startVoice() {
+    const btn = document.getElementById('micBtn');
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice input not supported in this browser. Try Chrome.');
+        return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    btn.style.background = 'rgba(6,214,160,0.2)';
+    btn.style.borderRadius = '50%';
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const text = event.results[0][0].transcript;
+        // Put voice text into chat input or search
+        const chatInput = document.getElementById('chatInput');
+        if (chatInput && document.getElementById('page-copilot').style.display !== 'none') {
+            chatInput.value = text;
+            sendChat();
+        } else {
+            // Use as search
+            document.querySelector('.search-box input').value = text;
+        }
+        btn.style.background = 'none';
+    };
+
+    recognition.onerror = function() { btn.style.background = 'none'; };
+    recognition.onend = function() { btn.style.background = 'none'; };
+}
+
+// === NOTIFICATIONS ===
+function toggleNotifications() {
+    const dropdown = document.getElementById('notifDropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+function updateNotifications(kpis) {
+    const badge = document.getElementById('alertBadge');
+    const list = document.getElementById('notifList');
+    const count = (kpis.suspicious || 0) + (kpis.pending_review || 0);
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+
+    let html = '';
+    if (kpis.suspicious > 0) {
+        html += `<div style="border-left:3px solid #f85149;padding:0.5rem 0.75rem;margin-bottom:0.5rem;border-radius:0 6px 6px 0;background:rgba(248,81,73,0.05);">
+            <div style="color:#fff;font-size:0.78rem;font-weight:500;">${kpis.suspicious} suspicious transactions detected</div>
+            <div style="color:#8b949e;font-size:0.68rem;">Review immediately in Fraud & Anomaly</div></div>`;
+    }
+    if (kpis.pending_review > 0) {
+        html += `<div style="border-left:3px solid #d29922;padding:0.5rem 0.75rem;margin-bottom:0.5rem;border-radius:0 6px 6px 0;background:rgba(210,153,34,0.05);">
+            <div style="color:#fff;font-size:0.78rem;font-weight:500;">${kpis.pending_review} transactions pending review</div>
+            <div style="color:#8b949e;font-size:0.68rem;">Manual verification needed</div></div>`;
+    }
+    if (kpis.reconciled > 0) {
+        html += `<div style="border-left:3px solid #06d6a0;padding:0.5rem 0.75rem;margin-bottom:0.5rem;border-radius:0 6px 6px 0;background:rgba(6,214,160,0.05);">
+            <div style="color:#fff;font-size:0.78rem;font-weight:500;">${kpis.reconciled} transactions auto-reconciled</div>
+            <div style="color:#8b949e;font-size:0.68rem;">Match rate: ${kpis.match_rate}%</div></div>`;
+    }
+    list.innerHTML = html || '<p style="color:#8b949e;font-size:0.78rem;">No alerts.</p>';
+}
+
+// Close notifications when clicking outside
+document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('notifDropdown');
+    const bell = document.getElementById('bellBtn');
+    if (!dropdown.contains(e.target) && e.target !== bell) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// === SEARCH ===
+document.querySelector('.search-box input').addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('.txn-table tbody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) || query === '' ? '' : 'none';
+    });
+});
+
+// === FRAUD & ALERTS ===
+function loadAlerts() {
+    fetch('/api/predictive-alerts', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({transactions:[], invoices:[]})})
+        .then(r => r.json())
+        .then(data => {
+            const el = document.getElementById('alertsContent');
+            if (!data.alerts || data.alerts.length === 0) {
+                el.innerHTML = '<div class="card" style="border-left:3px solid #06d6a0;"><p style="color:#06d6a0;font-weight:500;">No anomalies detected. System is healthy.</p></div>';
+                return;
+            }
+            let html = '';
+            data.alerts.forEach(a => {
+                const color = a.severity <= 1 ? '#f85149' : a.severity <= 2 ? '#d29922' : '#58a6ff';
+                const level = a.escalation ? a.escalation.level : 'medium';
+                html += `<div class="card" style="border-left:3px solid ${color};margin-bottom:0.6rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="font-weight:600;color:#fff;font-size:0.85rem;">${a.title}</div>
+                        <span style="background:rgba(255,255,255,0.05);padding:0.2rem 0.5rem;border-radius:5px;font-size:0.6rem;color:${color};font-weight:600;text-transform:uppercase;">${level}</span>
+                    </div>
+                    <p style="color:#b1bac4;font-size:0.78rem;margin:0.4rem 0;">${a.message}</p>
+                    <p style="color:#8b949e;font-size:0.7rem;">Action: ${a.action || 'Review on dashboard'}</p>
+                </div>`;
+            });
+            el.innerHTML = html;
+        });
+}
+
+// === CLIENT RISK ===
+function loadRiskProfiles() {
+    fetch('/api/client-risk').then(r => r.json()).then(data => {
+        const el = document.getElementById('riskProfiles');
+        if (!data.profiles || data.profiles.length === 0) {
+            el.innerHTML = '<p style="color:#8b949e;font-size:0.78rem;">No client data yet. Run reconciliation first.</p>';
+            return;
+        }
+        let html = '';
+        data.profiles.forEach(p => {
+            const color = p.risk_level === 'HIGH' ? '#f85149' : p.risk_level === 'MEDIUM' ? '#d29922' : '#06d6a0';
+            const barW = p.risk_score;
+            html += `<div style="padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#fff;font-size:0.8rem;font-weight:500;">${p.client_name}</span>
+                    <span style="color:${color};font-size:0.72rem;font-weight:600;">${p.risk_level} (${p.risk_score})</span>
+                </div>
+                <div style="height:4px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:0.3rem;">
+                    <div style="width:${barW}%;height:100%;background:${color};border-radius:2px;"></div>
+                </div>
+                ${p.insights && p.insights.length ? '<p style="color:#8b949e;font-size:0.68rem;margin-top:0.2rem;">' + p.insights[0] + '</p>' : ''}
+            </div>`;
+        });
+        el.innerHTML = html;
+    });
+}
+
+// === CURRENCY EXPOSURE ===
+function loadExposure() {
+    fetch('/api/treasury/consolidated').then(r => r.json()).then(data => {
+        const el = document.getElementById('currencyExposure');
+        const exp = data.exposure || [];
+        if (exp.length === 0) {
+            el.innerHTML = '<p style="color:#8b949e;font-size:0.78rem;">No exposure data. Upload transactions first.</p>';
+            return;
+        }
+        let html = '';
+        exp.forEach(e => {
+            const colors = {USD:'#06d6a0',EUR:'#58a6ff',MYR:'#a855f7',GBP:'#f85149',SGD:'#d29922'};
+            const clr = colors[e.currency] || '#8b949e';
+            html += `<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                <span style="color:#e6edf3;font-size:0.75rem;width:40px;">${e.currency}</span>
+                <div style="flex:1;height:7px;background:rgba(255,255,255,0.05);border-radius:4px;">
+                    <div style="width:${e.pct_of_total}%;height:100%;background:${clr};border-radius:4px;"></div></div>
+                <span style="color:#fff;font-size:0.75rem;font-weight:600;">RM ${(e.myr_equivalent/1000).toFixed(0)}k</span>
+            </div>`;
+        });
+        el.innerHTML = html;
+    });
+}
+
+// === REPORTS ===
+function loadReports() {
+    fetch('/api/reports/available').then(r => r.json()).then(data => {
+        const el = document.getElementById('reportButtons');
+        let html = '';
+        (data.reports || []).forEach(r => {
+            html += `<button onclick="generateReport('${r.id}')" style="padding:0.75rem;background:#131d2f;border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;text-align:left;">
+                <div style="color:#fff;font-size:0.8rem;font-weight:600;">${r.name}</div>
+                <div style="color:#8b949e;font-size:0.68rem;margin-top:0.2rem;">${r.desc}</div>
+            </button>`;
+        });
+        el.innerHTML = html;
+    });
+}
+
+function generateReport(type) {
+    fetch('/api/reports/generate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type:type})})
+        .then(r => r.json())
+        .then(report => {
+            let html = `<div class="card" style="margin-top:1rem;border-left:3px solid #06d6a0;">
+                <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">${report.title}</div>
+                <div style="color:#8b949e;font-size:0.7rem;margin-bottom:0.75rem;">Generated: ${new Date(report.generated).toLocaleString()}</div>`;
+            (report.sections || []).forEach(s => {
+                html += `<div style="margin-bottom:0.75rem;"><div style="color:#06d6a0;font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">${s.heading}</div>`;
+                if (typeof s.content === 'object' && !Array.isArray(s.content)) {
+                    Object.entries(s.content).forEach(([k,v]) => {
+                        html += `<div style="display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b1bac4;font-size:0.78rem;">${k}</span><span style="color:#fff;font-size:0.78rem;font-weight:500;">${v}</span></div>`;
+                    });
+                } else if (Array.isArray(s.content)) {
+                    s.content.forEach(item => { html += `<p style="color:#b1bac4;font-size:0.78rem;margin:0.2rem 0;">• ${item}</p>`; });
+                } else {
+                    html += `<p style="color:#b1bac4;font-size:0.78rem;">${s.content}</p>`;
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+            document.getElementById('reportButtons').insertAdjacentHTML('afterend', html);
+        });
+}
+
+// === VAULT STATS ===
+function loadVaultStats() {
+    fetch('/api/vault/stats').then(r => r.json()).then(data => {
+        document.getElementById('vaultCount').textContent = `${data.total_documents} files (${data.total_size_mb} MB)`;
+    });
+}
+
+// === AUTO-LOAD on page switch ===
+document.addEventListener('DOMContentLoaded', function() {
+    loadReports();
+    loadVaultStats();
+    loadReportGrid();
+});
+
+// === INVOICE GENERATOR ===
+function createInvoice() {
+    const data = {
+        client: {name: document.getElementById('invClient').value, email: document.getElementById('invEmail').value},
+        items: [{description: document.getElementById('invDesc').value, quantity: 1, amount: parseFloat(document.getElementById('invAmount').value)}],
+        currency: document.getElementById('invCurrency').value,
+        due_days: parseInt(document.getElementById('invDays').value),
+    };
+    fetch('/api/invoices', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)})
+        .then(r => r.json())
+        .then(inv => {
+            document.getElementById('invoiceResult').innerHTML = `
+            <div class="card" style="border-left:3px solid #06d6a0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                    <span style="color:#06d6a0;font-weight:600;">Invoice Created: ${inv.reference}</span>
+                    <span style="color:#8b949e;font-size:0.72rem;">Due: ${inv.due_date}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Subtotal</div><div style="color:#fff;font-weight:600;">${inv.currency} ${inv.subtotal.toFixed(2)}</div></div>
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Tax (SST 6%)</div><div style="color:#fff;font-weight:600;">${inv.currency} ${inv.tax_amount.toFixed(2)}</div></div>
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Total</div><div style="color:#06d6a0;font-weight:700;font-size:1.1rem;">${inv.currency} ${inv.total.toFixed(2)}</div></div>
+                </div>
+                <div style="margin-top:0.75rem;color:#b1bac4;font-size:0.75rem;">Client: ${inv.client.name} | Status: ${inv.status}</div>
+            </div>`;
+        });
+}
+
+// === MULTI-BUSINESS ===
+function addBusiness() {
+    const name = document.getElementById('bizName').value;
+    if (!name) return;
+    document.getElementById('portfolioSummary').innerHTML = `
+        <div style="border-left:3px solid #06d6a0;padding:0.5rem 0.75rem;margin-bottom:0.5rem;">
+            <div style="color:#fff;font-size:0.82rem;font-weight:500;">${name}</div>
+            <div style="color:#8b949e;font-size:0.7rem;">Currency: ${document.getElementById('bizCurrency').value} | Added just now</div>
+        </div>
+        <p style="color:#8b949e;font-size:0.72rem;margin-top:0.5rem;">Upload transactions for this entity to see consolidated analytics.</p>`;
+    document.getElementById('bizName').value = '';
+}
+
+// === WHATSAPP SIMULATION ===
+function simulateWhatsApp() {
+    const el = document.getElementById('waSimResult');
+    const steps = [
+        {delay:0, msg:'📱 Message received from +60 12-345 6789'},
+        {delay:800, msg:'📸 Receipt image received — processing...'},
+        {delay:1500, msg:'⏳ Running OCR extraction...'},
+        {delay:2200, msg:'💱 Converting USD → MYR at 4.47...'},
+        {delay:2900, msg:'🔍 Matching against invoices...'},
+        {delay:3500, msg:'✅ RECONCILED — Invoice INV-001 matched (94% confidence)'},
+        {delay:4000, msg:'📤 Reply sent: "Payment of RM 42.50 matched to INV-001. FX variance: -RM 0.70 (bank fee)"'},
+    ];
+    el.innerHTML = '';
+    steps.forEach(s => {
+        setTimeout(() => {
+            el.innerHTML += `<div style="color:#b1bac4;font-size:0.75rem;padding:0.25rem 0;border-left:2px solid rgba(6,214,160,0.3);padding-left:0.75rem;margin-bottom:0.3rem;">${s.msg}</div>`;
+        }, s.delay);
+    });
+}
+
+// === MULTILINGUAL UI ===
+const UI_TRANSLATIONS = {
+    en: {
+        command_center:'Command Center', live_ops:'Live treasury operations · all currencies',
+        document_intake:'Document Intake', reconciliation:'Reconciliation',
+        invoice_gen:'Invoice Generator', treasury_copilot:'Treasury Copilot',
+        review_queue:'Review Queue', fraud_anomaly:'Fraud & Anomaly',
+        analytics:'Analytics', whatsapp_telegram:'WhatsApp & Telegram',
+        document_vault:'Document Vault', audit_log:'Audit Log',
+        transactions:'Transactions', reconciled:'Reconciled', pending_review:'Pending Review',
+        fx_differences:'FX Differences', suspicious:'Suspicious', cash_flow:'Cash Flow',
+        search:'Search invoices, txns, counterpa...',
+    },
+    ms: {
+        command_center:'Pusat Kawalan', live_ops:'Operasi perbendaharaan langsung · semua mata wang',
+        document_intake:'Pengambilan Dokumen', reconciliation:'Penyesuaian',
+        invoice_gen:'Penjana Invois', treasury_copilot:'Kopilot Perbendaharaan',
+        review_queue:'Barisan Semakan', fraud_anomaly:'Penipuan & Anomali',
+        analytics:'Analitik', whatsapp_telegram:'WhatsApp & Telegram',
+        document_vault:'Bilik Kebal Dokumen', audit_log:'Log Audit',
+        transactions:'Transaksi', reconciled:'Disesuaikan', pending_review:'Menunggu Semakan',
+        fx_differences:'Perbezaan FX', suspicious:'Mencurigakan', cash_flow:'Aliran Tunai',
+        search:'Cari invois, transaksi...',
+    },
+    zh: {
+        command_center:'指挥中心', live_ops:'实时财务操作 · 所有货币',
+        document_intake:'文件录入', reconciliation:'对账',
+        invoice_gen:'发票生成器', treasury_copilot:'财务助手',
+        review_queue:'审核队列', fraud_anomaly:'欺诈与异常',
+        analytics:'分析', whatsapp_telegram:'WhatsApp & Telegram',
+        document_vault:'文件保险库', audit_log:'审计日志',
+        transactions:'交易', reconciled:'已对账', pending_review:'待审核',
+        fx_differences:'外汇差异', suspicious:'可疑', cash_flow:'现金流',
+        search:'搜索发票、交易...',
+    },
+    ta: {
+        command_center:'கட்டளை மையம்', live_ops:'நேரடி கருவூல செயல்பாடுகள்',
+        document_intake:'ஆவண உள்ளீடு', reconciliation:'சமரசம்',
+        invoice_gen:'விலைப்பட்டியல்', treasury_copilot:'கருவூல உதவியாளர்',
+        review_queue:'மதிப்பாய்வு வரிசை', fraud_anomaly:'மோசடி & அசாதாரணம்',
+        analytics:'பகுப்பாய்வு', whatsapp_telegram:'WhatsApp & Telegram',
+        document_vault:'ஆவண பெட்டகம்', audit_log:'தணிக்கை பதிவு',
+        transactions:'பரிவர்த்தனைகள்', reconciled:'சமரசம்', pending_review:'நிலுவை',
+        fx_differences:'FX வேறுபாடுகள்', suspicious:'சந்தேகம்', cash_flow:'பணப்புழக்கம்',
+        search:'தேடு...',
+    },
+};
+
+function switchLanguage(lang) {
+    const t = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+    const navLabels = ['command_center','document_intake','reconciliation','invoice_gen',
+                       'treasury_copilot','review_queue','fraud_anomaly','analytics',
+                       'whatsapp_telegram','document_vault','audit_log'];
+    document.querySelectorAll('.nav-item').forEach((item, i) => {
+        if (navLabels[i] && t[navLabels[i]]) item.innerHTML = '<span class="nav-dot"></span>' + t[navLabels[i]];
+    });
+    const metricLabels = ['transactions','reconciled','pending_review','fx_differences','suspicious','cash_flow'];
+    document.querySelectorAll('.mc-label').forEach((el, i) => {
+        if (metricLabels[i] && t[metricLabels[i]]) el.textContent = t[metricLabels[i]];
+    });
+    const searchInput = document.querySelector('.search-box input');
+    if (searchInput) searchInput.placeholder = t.search;
+    const titleEl = document.querySelector('.page-title');
+    const subEl = document.querySelector('.page-sub');
+    if (titleEl) { titleEl.textContent = t.command_center; subEl.textContent = t.live_ops; }
+    localStorage.setItem('treasurymind_lang', lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('treasurymind_lang');
+    if (saved && saved !== 'en') {
+        document.getElementById('langSelector').value = saved;
+        switchLanguage(saved);
+    }
+});
+
+// === REPORT GRID ===
+function loadReportGrid() {
+    fetch('/api/reports/available').then(r => r.json()).then(data => {
+        const el = document.getElementById('reportGrid');
+        if (!el) return;
+        let html = '';
+        (data.reports || []).forEach(r => {
+            html += `<div class="card" style="cursor:pointer;" onclick="generateReportInPage('${r.id}')">
+                <div style="color:#fff;font-size:0.82rem;font-weight:600;">${r.name}</div>
+                <div style="color:#8b949e;font-size:0.7rem;margin-top:0.3rem;">${r.desc}</div>
+            </div>`;
+        });
+        el.innerHTML = html;
+    });
+}
+
+function generateReportInPage(type) {
+    fetch('/api/reports/generate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type:type})})
+        .then(r => r.json())
+        .then(report => {
+            let html = `<div class="card" style="border-left:3px solid #06d6a0;">
+                <div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">${report.title}</div>
+                <div style="color:#8b949e;font-size:0.7rem;margin-bottom:0.75rem;">Generated: ${new Date(report.generated).toLocaleString()}</div>`;
+            (report.sections || []).forEach(s => {
+                html += `<div style="margin-bottom:0.75rem;"><div style="color:#06d6a0;font-size:0.75rem;font-weight:600;margin-bottom:0.3rem;">${s.heading}</div>`;
+                if (typeof s.content === 'object' && !Array.isArray(s.content)) {
+                    Object.entries(s.content).forEach(([k,v]) => {
+                        html += `<div style="display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b1bac4;font-size:0.78rem;">${k}</span><span style="color:#fff;font-size:0.78rem;font-weight:500;">${v}</span></div>`;
+                    });
+                } else if (Array.isArray(s.content)) {
+                    s.content.forEach(item => { html += `<p style="color:#b1bac4;font-size:0.78rem;margin:0.2rem 0;">• ${item}</p>`; });
+                } else {
+                    html += `<p style="color:#b1bac4;font-size:0.78rem;">${s.content}</p>`;
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+            document.getElementById('reportOutput').innerHTML = html;
+        });
+}
+</script>
+</main>
+</body>
+</html>
