@@ -89,38 +89,38 @@
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">Transactions</span>
                 <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
-            <div class="mc-value">1,247</div>
-            <div class="mc-delta up">↗ +8.2%</div>
+            <div class="mc-value" id="kpi-transactions">0</div>
+            <div class="mc-delta up"></div>
         </div>
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">Reconciled</span>
                 <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div></div>
-            <div class="mc-value">1,089</div>
-            <div class="mc-delta up">↗ +4.1%</div>
+            <div class="mc-value" id="kpi-reconciled">0</div>
+            <div class="mc-delta up"></div>
         </div>
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">Pending Review</span>
                 <div class="mc-icon red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg></div></div>
-            <div class="mc-value">124</div>
-            <div class="mc-delta down">↘ -12%</div>
+            <div class="mc-value" id="kpi-pending">0</div>
+            <div class="mc-delta down"></div>
         </div>
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">FX Differences</span>
                 <div class="mc-icon yellow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
-            <div class="mc-value">$28,450</div>
-            <div class="mc-delta warn">↗ +2.4%</div>
+            <div class="mc-value" id="kpi-fx">0</div>
+            <div class="mc-delta warn"></div>
         </div>
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">Suspicious</span>
                 <div class="mc-icon red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
-            <div class="mc-value">14</div>
-            <div class="mc-delta down">↗ +3</div>
+            <div class="mc-value" id="kpi-suspicious">0</div>
+            <div class="mc-delta down"></div>
         </div>
         <div class="metric-card">
             <div class="mc-top"><span class="mc-label">Cash Flow</span>
                 <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
-            <div class="mc-value">$8,420,000</div>
-            <div class="mc-delta up">↗ +11.6%</div>
+            <div class="mc-value" id="kpi-cashflow">0</div>
+            <div class="mc-delta up"></div>
         </div>
     </div><!-- end metrics -->
 
@@ -148,15 +148,15 @@
         <div class="card">
             <div class="card-title">Payment Status</div>
             <div class="card-sub">Today's breakdown</div>
-            <div class="status-bars">
-                <div class="status-row"><span>Auto Matched</span><span class="status-val">1089 · 87%</span></div>
-                <div class="status-bar"><div class="status-fill green" style="width:87%"></div></div>
-                <div class="status-row"><span>Partial Match</span><span class="status-val">182 · 8%</span></div>
-                <div class="status-bar"><div class="status-fill yellow" style="width:8%"></div></div>
-                <div class="status-row"><span>Needs Review</span><span class="status-val">42 · 4%</span></div>
-                <div class="status-bar"><div class="status-fill blue" style="width:4%"></div></div>
-                <div class="status-row"><span>Fraud Risk</span><span class="status-val">14 · 1%</span></div>
-                <div class="status-bar"><div class="status-fill red" style="width:1.5%"></div></div>
+            <div class="status-bars" id="paymentStatusBars">
+                <div class="status-row"><span>Auto Matched</span><span class="status-val" id="ps-matched">0 · 0%</span></div>
+                <div class="status-bar"><div class="status-fill green" id="ps-matched-bar" style="width:0%"></div></div>
+                <div class="status-row"><span>Partial Match</span><span class="status-val" id="ps-partial">0 · 0%</span></div>
+                <div class="status-bar"><div class="status-fill yellow" id="ps-partial-bar" style="width:0%"></div></div>
+                <div class="status-row"><span>Needs Review</span><span class="status-val" id="ps-review">0 · 0%</span></div>
+                <div class="status-bar"><div class="status-fill blue" id="ps-review-bar" style="width:0%"></div></div>
+                <div class="status-row"><span>Fraud Risk</span><span class="status-val" id="ps-fraud">0 · 0%</span></div>
+                <div class="status-bar"><div class="status-fill red" id="ps-fraud-bar" style="width:0%"></div></div>
             </div>
         </div>
     </section>
@@ -166,38 +166,19 @@
         <div class="card">
             <div class="card-header-row">
                 <div><div class="card-title">Recent Transactions</div><div class="card-sub">Latest AI-processed payments</div></div>
-                <a href="#" class="link-green">Open reconciliation →</a>
+                <a href="#" class="link-green" onclick="event.preventDefault();navigateTo('recon')">Open reconciliation →</a>
             </div>
             <table class="txn-table">
                 <thead><tr><th>Transaction</th><th>Counterparty</th><th>Amount</th><th>Confidence</th><th>Status</th></tr></thead>
-                <tbody>
-                    <tr><td><div class="t-primary">TXN-10241</div><div class="t-sub">INV-2025-0421</div></td>
-                        <td><div class="t-primary">Acme Industries (US)</div><div class="t-sub">→ Pacific Holdings (MY)</div></td>
-                        <td><div class="t-amount">42.5 <span class="t-cur">MYR</span></div><div class="t-sub">exp 10 USD</div></td>
-                        <td><div class="conf-bar"><div class="conf-fill green" style="width:94%"></div></div><span class="conf-pct">94%</span></td>
-                        <td><span class="badge badge-green">Auto Matched</span></td></tr>
-                    <tr><td><div class="t-primary">TXN-10242</div><div class="t-sub">INV-2025-0422</div></td>
-                        <td><div class="t-primary">Tanaka Trading Co (JP)</div><div class="t-sub">→ Nordic Components (SE)</div></td>
-                        <td><div class="t-amount">12,410 <span class="t-cur">EUR</span></div><div class="t-sub">exp 12,500 EUR</div></td>
-                        <td><div class="conf-bar"><div class="conf-fill green" style="width:88%"></div></div><span class="conf-pct">88%</span></td>
-                        <td><span class="badge badge-yellow">Partial Match</span></td></tr>
-                    <tr><td><div class="t-primary">TXN-10243</div><div class="t-sub">INV-2025-0419</div></td>
-                        <td><div class="t-primary">Mumbai Textiles (IN)</div><div class="t-sub">→ Lyon Fashion House (FR)</div></td>
-                        <td><div class="t-amount">7,920 <span class="t-cur">EUR</span></div><div class="t-sub">exp 8,500 EUR</div></td>
-                        <td><div class="conf-bar"><div class="conf-fill red" style="width:62%"></div></div><span class="conf-pct">62%</span></td>
-                        <td><span class="badge badge-orange">Needs Review</span></td></tr>
-                    <tr><td><div class="t-primary">TXN-10244</div><div class="t-sub">INV-2025-0418</div></td>
-                        <td><div class="t-primary">Unknown wire</div><div class="t-sub">→ Pacific Holdings (MY)</div></td>
-                        <td><div class="t-amount">24,800 <span class="t-cur">USD</span></div><div class="t-sub">exp 0 USD</div></td>
-                        <td><div class="conf-bar"><div class="conf-fill red" style="width:21%"></div></div><span class="conf-pct">21%</span></td>
-                        <td><span class="badge badge-red">Fraud Risk</span></td></tr>
+                <tbody id="recentTxnBody">
+                    <tr><td colspan="5" style="color:#8b949e;text-align:center;padding:2rem;">No transactions yet. Run reconciliation to see results.</td></tr>
                 </tbody>
             </table>
         </div>
         <div class="card ai-card">
-            <div class="ai-header"><div class="ai-dot"></div><span class="ai-label">AI Insight</span><span class="ai-time">Updated 2 min ago</span></div>
-            <p class="ai-text">Reconciliation rate up <span class="highlight-green">+4.1%</span> this week. MYR settlements show recurring <span class="highlight-red">MYR 0.70</span> intermediary fee from CIMB → Maybank corridor. Consider whitelisting this fee pattern to lift auto-match by ~6%.</p>
-            <a href="#" class="link-green">Ask Treasury Copilot →</a>
+            <div class="ai-header"><div class="ai-dot"></div><span class="ai-label">AI Insight</span><span class="ai-time" id="ai-insight-time"></span></div>
+            <p class="ai-text" id="ai-insight-text">Run reconciliation to generate AI insights about your treasury operations.</p>
+            <a href="#" class="link-green" onclick="event.preventDefault();navigateTo('copilot')">Ask Treasury Copilot →</a>
         </div>
     </section>
     </section><!-- end page-command -->
@@ -486,16 +467,8 @@ function runReconciliation() {
             if (data.success) {
                 const k = data.kpis;
                 status.innerHTML = `<span style="color:#06d6a0;">✓ Complete! ${k.transactions} transactions processed. ${k.reconciled} reconciled, ${k.pending_review} pending, ${k.suspicious} suspicious.</span>`;
-                // Update command center metrics
-                const vals = document.querySelectorAll('.mc-value');
-                if (vals.length >= 6) {
-                    vals[0].textContent = k.transactions.toLocaleString();
-                    vals[1].textContent = k.reconciled.toLocaleString();
-                    vals[2].textContent = k.pending_review.toLocaleString();
-                    vals[3].textContent = '$' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:0});
-                    vals[4].textContent = k.suspicious.toLocaleString();
-                    vals[5].textContent = '$' + k.cash_flow.toLocaleString(undefined,{maximumFractionDigits:0});
-                }
+                // Refresh command center KPIs from backend
+                loadKPIs();
                 // Update notifications
                 updateNotifications(k);
                 // Auto-load results on recon page
@@ -860,28 +833,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // === INVOICE GENERATOR ===
 function createInvoice() {
+    const itemsRaw = document.getElementById('invItems').value.trim();
+    const items = [];
+    if (itemsRaw) {
+        itemsRaw.split('\n').forEach(line => {
+            const parts = line.split('|').map(s => s.trim());
+            if (parts.length >= 3) {
+                items.push({description: parts[0], quantity: parseInt(parts[1]) || 1, amount: parseFloat(parts[2]) || 0});
+            } else if (parts.length === 1 && parts[0]) {
+                items.push({description: parts[0], quantity: 1, amount: 0});
+            }
+        });
+    }
     const data = {
         client: {name: document.getElementById('invClient').value, email: document.getElementById('invEmail').value},
-        items: [{description: document.getElementById('invDesc').value, quantity: 1, amount: parseFloat(document.getElementById('invAmount').value)}],
+        items: items,
         currency: document.getElementById('invCurrency').value,
         due_days: parseInt(document.getElementById('invDays').value),
     };
     fetch('/api/invoices', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)})
         .then(r => r.json())
         .then(inv => {
-            document.getElementById('invoiceResult').innerHTML = `
-            <div class="card" style="border-left:3px solid #06d6a0;">
+            const el = document.getElementById('invoiceList');
+            el.innerHTML = `
+            <div class="card" style="border-left:3px solid #06d6a0;padding:1rem;margin-bottom:0.75rem;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                     <span style="color:#06d6a0;font-weight:600;">Invoice Created: ${inv.reference}</span>
                     <span style="color:#8b949e;font-size:0.72rem;">Due: ${inv.due_date}</span>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
-                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Subtotal</div><div style="color:#fff;font-weight:600;">${inv.currency} ${inv.subtotal.toFixed(2)}</div></div>
-                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Tax (SST 6%)</div><div style="color:#fff;font-weight:600;">${inv.currency} ${inv.tax_amount.toFixed(2)}</div></div>
-                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Total</div><div style="color:#06d6a0;font-weight:700;font-size:1.1rem;">${inv.currency} ${inv.total.toFixed(2)}</div></div>
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Subtotal</div><div style="color:#fff;font-weight:600;">${inv.currency} ${(inv.subtotal || 0).toFixed(2)}</div></div>
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Tax (SST 6%)</div><div style="color:#fff;font-weight:600;">${inv.currency} ${(inv.tax_amount || 0).toFixed(2)}</div></div>
+                    <div><div style="color:#8b949e;font-size:0.65rem;text-transform:uppercase;">Total</div><div style="color:#06d6a0;font-weight:700;font-size:1.1rem;">${inv.currency} ${(inv.total || 0).toFixed(2)}</div></div>
                 </div>
-                <div style="margin-top:0.75rem;color:#b1bac4;font-size:0.75rem;">Client: ${inv.client.name} | Status: ${inv.status}</div>
+                <div style="margin-top:0.75rem;color:#b1bac4;font-size:0.75rem;">Client: ${inv.client ? inv.client.name : data.client.name} | Status: ${inv.status || 'DRAFT'}</div>
             </div>`;
+        })
+        .catch(e => {
+            document.getElementById('invoiceList').innerHTML = `<p style="color:#f85149;font-size:0.78rem;">Error creating invoice: ${e.message}</p>`;
         });
 }
 
@@ -889,7 +878,7 @@ function createInvoice() {
 function addBusiness() {
     const name = document.getElementById('bizName').value;
     if (!name) return;
-    document.getElementById('portfolioSummary').innerHTML = `
+    document.getElementById('bizList').innerHTML = `
         <div style="border-left:3px solid #06d6a0;padding:0.5rem 0.75rem;margin-bottom:0.5rem;">
             <div style="color:#fff;font-size:0.82rem;font-weight:500;">${name}</div>
             <div style="color:#8b949e;font-size:0.7rem;">Currency: ${document.getElementById('bizCurrency').value} | Added just now</div>
@@ -930,6 +919,43 @@ const UI_TRANSLATIONS = {
         transactions:'Transactions', reconciled:'Reconciled', pending_review:'Pending Review',
         fx_differences:'FX Differences', suspicious:'Suspicious', cash_flow:'Cash Flow',
         search:'Search invoices, txns, counterpa...',
+        // Card titles & subtitles
+        recon_trends:'Reconciliation Trends', last_7_days:'Last 7 days',
+        currency_dist:'Currency Distribution', by_volume:'By volume',
+        fx_exposure:'FX Exposure', usd_equiv:'USD equivalent by currency',
+        payment_status:'Payment Status', todays_breakdown:"Today's breakdown",
+        recent_txns:'Recent Transactions', latest_ai:'Latest AI-processed payments',
+        ai_insight:'AI Insight', open_recon:'Open reconciliation →',
+        ask_copilot:'Ask Treasury Copilot →',
+        // Buttons & labels
+        run_recon:'Run Reconciliation', generate_invoice:'Generate Invoice',
+        send:'Send', upload_docs:'Upload Documents',
+        upload_sub:'Upload receipts/invoices and bank statements for AI processing',
+        receipts_label:'Receipts / Invoices (PNG, JPG, PDF)',
+        bank_label:'Bank Statement (XLSX, CSV)',
+        new_invoice:'New Invoice', invoice_lifecycle:'Invoice Lifecycle',
+        client_name:'Client Name', email:'Email', currency:'Currency',
+        due_days:'Due (days)', items_label:'Items (description | qty | amount — one per line)',
+        // Status bars
+        auto_matched:'Auto Matched', partial_match:'Partial Match',
+        needs_review:'Needs Review', fraud_risk:'Fraud Risk',
+        // Multi-business
+        multi_biz:'Multi-Business Treasury View',
+        total_portfolio:'Total Portfolio', biz_entities:'Business Entities',
+        currencies_active:'Currencies Active', add_entity:'Add Business Entity',
+        add_btn:'Add Entity', currency_exposure_title:'Currency Exposure',
+        // Reports
+        reports:'Automated Reports', reports_sub:'Generate on-demand or schedule recurring reports',
+        // Vault
+        secure_vault:'Secure Document Vault', vault_sub:'Encrypted storage with SHA-256 integrity verification',
+        upload_vault:'Upload to Vault', store_securely:'Store Securely',
+        stored_docs:'Stored Documents',
+        // Copilot
+        copilot_title:'Treasury Copilot',
+        copilot_sub:'Ask about payments, cash flow, or invoices — in any language. Attach images or files for instant analysis.',
+        // Notifications
+        notifications:'Notifications',
+        no_alerts:'No alerts yet. Run reconciliation to generate.',
     },
     ms: {
         command_center:'Pusat Kawalan', live_ops:'Operasi perbendaharaan langsung · semua mata wang',
@@ -941,6 +967,35 @@ const UI_TRANSLATIONS = {
         transactions:'Transaksi', reconciled:'Disesuaikan', pending_review:'Menunggu Semakan',
         fx_differences:'Perbezaan FX', suspicious:'Mencurigakan', cash_flow:'Aliran Tunai',
         search:'Cari invois, transaksi...',
+        recon_trends:'Trend Penyesuaian', last_7_days:'7 hari lepas',
+        currency_dist:'Taburan Mata Wang', by_volume:'Mengikut jumlah',
+        fx_exposure:'Pendedahan FX', usd_equiv:'Setara USD mengikut mata wang',
+        payment_status:'Status Pembayaran', todays_breakdown:'Pecahan hari ini',
+        recent_txns:'Transaksi Terkini', latest_ai:'Pembayaran diproses AI terkini',
+        ai_insight:'Pandangan AI', open_recon:'Buka penyesuaian →',
+        ask_copilot:'Tanya Kopilot Perbendaharaan →',
+        run_recon:'Jalankan Penyesuaian', generate_invoice:'Jana Invois',
+        send:'Hantar', upload_docs:'Muat Naik Dokumen',
+        upload_sub:'Muat naik resit/invois dan penyata bank untuk pemprosesan AI',
+        receipts_label:'Resit / Invois (PNG, JPG, PDF)',
+        bank_label:'Penyata Bank (XLSX, CSV)',
+        new_invoice:'Invois Baru', invoice_lifecycle:'Kitaran Invois',
+        client_name:'Nama Pelanggan', email:'Emel', currency:'Mata Wang',
+        due_days:'Tempoh (hari)', items_label:'Item (keterangan | kuantiti | jumlah — satu setiap baris)',
+        auto_matched:'Padanan Auto', partial_match:'Padanan Separa',
+        needs_review:'Perlu Semakan', fraud_risk:'Risiko Penipuan',
+        multi_biz:'Pandangan Perbendaharaan Pelbagai Perniagaan',
+        total_portfolio:'Jumlah Portfolio', biz_entities:'Entiti Perniagaan',
+        currencies_active:'Mata Wang Aktif', add_entity:'Tambah Entiti Perniagaan',
+        add_btn:'Tambah Entiti', currency_exposure_title:'Pendedahan Mata Wang',
+        reports:'Laporan Automatik', reports_sub:'Jana atas permintaan atau jadualkan laporan berulang',
+        secure_vault:'Bilik Kebal Dokumen Selamat', vault_sub:'Storan disulitkan dengan pengesahan integriti SHA-256',
+        upload_vault:'Muat Naik ke Bilik Kebal', store_securely:'Simpan Dengan Selamat',
+        stored_docs:'Dokumen Tersimpan',
+        copilot_title:'Kopilot Perbendaharaan',
+        copilot_sub:'Tanya tentang pembayaran, aliran tunai, atau invois — dalam mana-mana bahasa.',
+        notifications:'Pemberitahuan',
+        no_alerts:'Tiada amaran. Jalankan penyesuaian untuk menjana.',
     },
     zh: {
         command_center:'指挥中心', live_ops:'实时财务操作 · 所有货币',
@@ -952,6 +1007,35 @@ const UI_TRANSLATIONS = {
         transactions:'交易', reconciled:'已对账', pending_review:'待审核',
         fx_differences:'外汇差异', suspicious:'可疑', cash_flow:'现金流',
         search:'搜索发票、交易...',
+        recon_trends:'对账趋势', last_7_days:'最近7天',
+        currency_dist:'货币分布', by_volume:'按交易量',
+        fx_exposure:'外汇敞口', usd_equiv:'按货币的美元等值',
+        payment_status:'支付状态', todays_breakdown:'今日明细',
+        recent_txns:'最近交易', latest_ai:'最新AI处理的付款',
+        ai_insight:'AI洞察', open_recon:'打开对账 →',
+        ask_copilot:'询问财务助手 →',
+        run_recon:'运行对账', generate_invoice:'生成发票',
+        send:'发送', upload_docs:'上传文件',
+        upload_sub:'上传收据/发票和银行对账单进行AI处理',
+        receipts_label:'收据/发票 (PNG, JPG, PDF)',
+        bank_label:'银行对账单 (XLSX, CSV)',
+        new_invoice:'新发票', invoice_lifecycle:'发票生命周期',
+        client_name:'客户名称', email:'电子邮件', currency:'货币',
+        due_days:'到期天数', items_label:'项目（描述 | 数量 | 金额 — 每行一项）',
+        auto_matched:'自动匹配', partial_match:'部分匹配',
+        needs_review:'需要审核', fraud_risk:'欺诈风险',
+        multi_biz:'多业务财务视图',
+        total_portfolio:'总投资组合', biz_entities:'业务实体',
+        currencies_active:'活跃货币', add_entity:'添加业务实体',
+        add_btn:'添加实体', currency_exposure_title:'货币敞口',
+        reports:'自动报告', reports_sub:'按需生成或安排定期报告',
+        secure_vault:'安全文件保险库', vault_sub:'SHA-256完整性验证的加密存储',
+        upload_vault:'上传到保险库', store_securely:'安全存储',
+        stored_docs:'已存储文件',
+        copilot_title:'财务助手',
+        copilot_sub:'询问有关付款、现金流或发票的问题 — 支持任何语言。附加图片或文件进行即时分析。',
+        notifications:'通知',
+        no_alerts:'暂无警报。运行对账以生成。',
     },
     ta: {
         command_center:'கட்டளை மையம்', live_ops:'நேரடி கருவூல செயல்பாடுகள்',
@@ -963,26 +1047,120 @@ const UI_TRANSLATIONS = {
         transactions:'பரிவர்த்தனைகள்', reconciled:'சமரசம்', pending_review:'நிலுவை',
         fx_differences:'FX வேறுபாடுகள்', suspicious:'சந்தேகம்', cash_flow:'பணப்புழக்கம்',
         search:'தேடு...',
+        recon_trends:'சமரச போக்குகள்', last_7_days:'கடந்த 7 நாட்கள்',
+        currency_dist:'நாணய விநியோகம்', by_volume:'அளவு அடிப்படையில்',
+        fx_exposure:'FX வெளிப்பாடு', usd_equiv:'நாணயம் வாரியாக USD சமம்',
+        payment_status:'கட்டண நிலை', todays_breakdown:'இன்றைய பிரிவு',
+        recent_txns:'சமீபத்திய பரிவர்த்தனைகள்', latest_ai:'சமீபத்திய AI செயலாக்க கட்டணங்கள்',
+        ai_insight:'AI நுண்ணறிவு', open_recon:'சமரசம் திற →',
+        ask_copilot:'கருவூல உதவியாளரிடம் கேள் →',
+        run_recon:'சமரசம் இயக்கு', generate_invoice:'விலைப்பட்டியல் உருவாக்கு',
+        send:'அனுப்பு', upload_docs:'ஆவணங்களை பதிவேற்று',
+        upload_sub:'AI செயலாக்கத்திற்கு ரசீதுகள்/விலைப்பட்டியல்கள் மற்றும் வங்கி அறிக்கைகளை பதிவேற்றவும்',
+        receipts_label:'ரசீதுகள் / விலைப்பட்டியல்கள் (PNG, JPG, PDF)',
+        bank_label:'வங்கி அறிக்கை (XLSX, CSV)',
+        new_invoice:'புதிய விலைப்பட்டியல்', invoice_lifecycle:'விலைப்பட்டியல் வாழ்க்கைச்சுழற்சி',
+        client_name:'வாடிக்கையாளர் பெயர்', email:'மின்னஞ்சல்', currency:'நாணயம்',
+        due_days:'காலக்கெடு (நாட்கள்)', items_label:'பொருட்கள் (விளக்கம் | அளவு | தொகை — ஒரு வரிக்கு ஒன்று)',
+        auto_matched:'தானியங்கி பொருத்தம்', partial_match:'பகுதி பொருத்தம்',
+        needs_review:'மதிப்பாய்வு தேவை', fraud_risk:'மோசடி ஆபத்து',
+        multi_biz:'பல வணிக கருவூல காட்சி',
+        total_portfolio:'மொத்த போர்ட்ஃபோலியோ', biz_entities:'வணிக நிறுவனங்கள்',
+        currencies_active:'செயலில் நாணயங்கள்', add_entity:'வணிக நிறுவனம் சேர்',
+        add_btn:'நிறுவனம் சேர்', currency_exposure_title:'நாணய வெளிப்பாடு',
+        reports:'தானியங்கி அறிக்கைகள்', reports_sub:'தேவைக்கேற்ப உருவாக்கு அல்லது திட்டமிடு',
+        secure_vault:'பாதுகாப்பான ஆவண பெட்டகம்', vault_sub:'SHA-256 ஒருமைப்பாடு சரிபார்ப்புடன் மறையாக்கப்பட்ட சேமிப்பு',
+        upload_vault:'பெட்டகத்தில் பதிவேற்று', store_securely:'பாதுகாப்பாக சேமி',
+        stored_docs:'சேமிக்கப்பட்ட ஆவணங்கள்',
+        copilot_title:'கருவூல உதவியாளர்',
+        copilot_sub:'கட்டணங்கள், பணப்புழக்கம் அல்லது விலைப்பட்டியல்கள் பற்றி கேளுங்கள் — எந்த மொழியிலும்.',
+        notifications:'அறிவிப்புகள்',
+        no_alerts:'எச்சரிக்கைகள் இல்லை. உருவாக்க சமரசம் இயக்கவும்.',
     },
 };
 
 function switchLanguage(lang) {
     const t = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.en;
+
+    // Nav items
     const navLabels = ['command_center','document_intake','reconciliation','invoice_gen',
                        'treasury_copilot','review_queue','fraud_anomaly','analytics',
                        'whatsapp_telegram','document_vault','audit_log'];
     document.querySelectorAll('.nav-item').forEach((item, i) => {
         if (navLabels[i] && t[navLabels[i]]) item.innerHTML = '<span class="nav-dot"></span>' + t[navLabels[i]];
     });
+
+    // Metric labels
     const metricLabels = ['transactions','reconciled','pending_review','fx_differences','suspicious','cash_flow'];
-    document.querySelectorAll('.mc-label').forEach((el, i) => {
+    document.querySelectorAll('#page-command .mc-label').forEach((el, i) => {
         if (metricLabels[i] && t[metricLabels[i]]) el.textContent = t[metricLabels[i]];
     });
+
+    // Search placeholder
     const searchInput = document.querySelector('.search-box input');
     if (searchInput) searchInput.placeholder = t.search;
+
+    // Page title & subtitle (only if on command center)
     const titleEl = document.querySelector('.page-title');
     const subEl = document.querySelector('.page-sub');
     if (titleEl) { titleEl.textContent = t.command_center; subEl.textContent = t.live_ops; }
+
+    // Card titles in command center
+    const cardTitles = document.querySelectorAll('#page-command .card-title');
+    const cardSubs = document.querySelectorAll('#page-command .card-sub');
+    const titleMap = [
+        {title:'recon_trends', sub:'last_7_days'},
+        {title:'currency_dist', sub:'by_volume'},
+        {title:'fx_exposure', sub:'usd_equiv'},
+        {title:'payment_status', sub:'todays_breakdown'},
+        {title:'recent_txns', sub:'latest_ai'},
+    ];
+    cardTitles.forEach((el, i) => {
+        if (titleMap[i] && t[titleMap[i].title]) el.textContent = t[titleMap[i].title];
+    });
+    cardSubs.forEach((el, i) => {
+        if (titleMap[i] && t[titleMap[i].sub]) el.textContent = t[titleMap[i].sub];
+    });
+
+    // Status bar labels
+    const statusLabels = ['auto_matched','partial_match','needs_review','fraud_risk'];
+    document.querySelectorAll('#paymentStatusBars .status-row span:first-child').forEach((el, i) => {
+        if (statusLabels[i] && t[statusLabels[i]]) el.textContent = t[statusLabels[i]];
+    });
+
+    // Open recon link
+    const reconLink = document.querySelector('#page-command .link-green[onclick*="recon"]');
+    if (reconLink && t.open_recon) reconLink.textContent = t.open_recon;
+
+    // Ask copilot links
+    document.querySelectorAll('#page-command .link-green[onclick*="copilot"]').forEach(el => {
+        if (t.ask_copilot) el.textContent = t.ask_copilot;
+    });
+
+    // AI Insight label
+    const aiLabel = document.querySelector('.ai-label');
+    if (aiLabel && t.ai_insight) aiLabel.textContent = t.ai_insight;
+
+    // Notifications title
+    const notifTitle = document.querySelector('#notifDropdown > div:first-child');
+    if (notifTitle && t.notifications) notifTitle.textContent = t.notifications;
+
+    // Document Intake page
+    const intakeTitles = document.querySelectorAll('#page-intake .card-title');
+    if (intakeTitles.length > 0 && t.upload_docs) intakeTitles[0].textContent = t.upload_docs;
+    const intakeSubs = document.querySelectorAll('#page-intake .card-sub');
+    if (intakeSubs.length > 0 && t.upload_sub) intakeSubs[0].textContent = t.upload_sub;
+
+    // Invoice page
+    const invTitles = document.querySelectorAll('#page-invoices .card-title');
+    if (invTitles.length > 0 && t.invoice_gen) invTitles[0].textContent = t.invoice_gen;
+
+    // Copilot page
+    const copTitles = document.querySelectorAll('#page-copilot .card-title');
+    if (copTitles.length > 0 && t.copilot_title) copTitles[0].textContent = t.copilot_title;
+    const copSubs = document.querySelectorAll('#page-copilot .card-sub');
+    if (copSubs.length > 0 && t.copilot_sub) copSubs[0].textContent = t.copilot_sub;
+
     localStorage.setItem('treasurymind_lang', lang);
 }
 
@@ -992,7 +1170,56 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('langSelector').value = saved;
         switchLanguage(saved);
     }
+    // Load KPIs from backend on page load
+    loadKPIs();
 });
+
+// === LOAD KPIs FROM BACKEND ===
+function loadKPIs() {
+    fetch('/api/kpis').then(r => r.json()).then(data => {
+        if (data.success && data.kpis) {
+            const k = data.kpis;
+            document.getElementById('kpi-transactions').textContent = k.transactions.toLocaleString();
+            document.getElementById('kpi-reconciled').textContent = k.reconciled.toLocaleString();
+            document.getElementById('kpi-pending').textContent = k.pending_review.toLocaleString();
+            document.getElementById('kpi-fx').textContent = k.fx_variance ? ('$' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:0})) : '0';
+            document.getElementById('kpi-suspicious').textContent = k.suspicious.toLocaleString();
+            document.getElementById('kpi-cashflow').textContent = k.cash_flow ? ('$' + k.cash_flow.toLocaleString(undefined,{maximumFractionDigits:0})) : '0';
+
+            // Update payment status bars
+            const total = k.transactions || 1;
+            const matchedPct = total > 0 ? Math.round((k.reconciled / total) * 100) : 0;
+            const pendingPct = total > 0 ? Math.round((k.pending_review / total) * 100) : 0;
+            const suspPct = total > 0 ? Math.round((k.suspicious / total) * 100) : 0;
+            const partialPct = Math.max(0, 100 - matchedPct - pendingPct - suspPct);
+
+            document.getElementById('ps-matched').textContent = `${k.reconciled} · ${matchedPct}%`;
+            document.getElementById('ps-matched-bar').style.width = matchedPct + '%';
+            document.getElementById('ps-partial').textContent = `${k.processing || 0} · ${partialPct}%`;
+            document.getElementById('ps-partial-bar').style.width = partialPct + '%';
+            document.getElementById('ps-review').textContent = `${k.pending_review} · ${pendingPct}%`;
+            document.getElementById('ps-review-bar').style.width = pendingPct + '%';
+            document.getElementById('ps-fraud').textContent = `${k.suspicious} · ${suspPct}%`;
+            document.getElementById('ps-fraud-bar').style.width = suspPct + '%';
+
+            // Update AI insight if data exists
+            if (k.transactions > 0) {
+                const matchRate = k.match_rate || Math.round((k.reconciled / k.transactions) * 100);
+                document.getElementById('ai-insight-text').innerHTML = `Reconciliation match rate: <span class="highlight-green">${matchRate}%</span>. ${k.reconciled} transactions auto-reconciled, ${k.pending_review} pending review, ${k.suspicious} flagged as suspicious.`;
+                document.getElementById('ai-insight-time').textContent = 'Updated just now';
+            }
+
+            // Update notifications
+            updateNotifications(k);
+        }
+    }).catch(() => {});
+}
+
+// === NAVIGATE TO PAGE ===
+function navigateTo(page) {
+    const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (navItem) navItem.click();
+}
 
 // === REPORT GRID ===
 function loadReportGrid() {

@@ -211,6 +211,27 @@ def api_reconcile():
     return jsonify(response_data)
 
 
+@app.route("/api/kpis")
+def api_kpis():
+    """Get current KPI state. Returns all 0s if no reconciliation has been run."""
+    data = session.get("last_results", None)
+    if data and data.get("kpis"):
+        return jsonify({"success": True, "kpis": data["kpis"]})
+    return jsonify({
+        "success": True,
+        "kpis": {
+            "transactions": 0,
+            "reconciled": 0,
+            "pending_review": 0,
+            "suspicious": 0,
+            "processing": 0,
+            "fx_variance": 0,
+            "cash_flow": 0,
+            "match_rate": 0,
+        }
+    })
+
+
 @app.route("/api/results")
 def api_results():
     """Get last reconciliation results."""

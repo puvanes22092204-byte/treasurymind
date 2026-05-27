@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const target = document.getElementById('page-' + page);
             if (target) target.style.display = 'block';
 
-            // Auto-load results when switching to recon page
+            // Auto-load data when switching pages
+            if (page === 'command' && typeof loadKPIs === 'function') loadKPIs();
             if (page === 'recon') loadResults();
             if (page === 'fraud') loadAlerts();
             if (page === 'analytics') { loadRiskProfiles(); loadExposure(); loadReports(); }
