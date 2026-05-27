@@ -24,6 +24,7 @@ from agents.document_vault import DocumentVault
 from agents.telegram_bot import TelegramBot
 from agents.invoice_lifecycle import InvoiceLifecycleManager
 from agents.multilingual_nlp import MultilingualNLP
+from agents.treasury_intelligence import TreasuryIntelligenceAgent
 from blockchain.logger import BlockchainLogger
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -48,6 +49,7 @@ doc_vault = DocumentVault(vault_path=os.path.join(os.path.dirname(__file__), "va
 telegram = TelegramBot()
 invoice_mgr = InvoiceLifecycleManager()
 nlp = MultilingualNLP()
+treasury_intel = TreasuryIntelligenceAgent()
 
 
 @app.route("/")
@@ -205,6 +207,10 @@ def api_reconcile():
         "results": detailed,
         "summary": summary,
     }
+
+    # Run Treasury Intelligence Agent
+    intel_analysis = treasury_intel.analyze(detailed, {"summary": summary}, fx_summary)
+    response_data["intelligence"] = intel_analysis
 
     # Store for session
     session["last_results"] = response_data
@@ -404,6 +410,21 @@ def api_detect_language():
     text = data.get("text", "")
     lang = nlp.detect_language(text)
     return jsonify({"language": lang, "text": text})
+
+
+@app.route("/api/intelligence")
+def api_intelligence():
+    """Run Treasury Intelligence Agent analysis."""
+    last = session.get("last_results", {})
+    transactions = []
+    if last and last.get("results"):
+        transactions = last["results"]
+
+    results_data = {"summary": last.get("summary", {})}
+    fx_data = last.get("kpis", {})
+
+    analysis = treasury_intel.analyze(transactions, results_data, fx_data)
+    return jsonify(analysis)
 
 
 if __name__ == "__main__":
