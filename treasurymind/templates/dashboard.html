@@ -1210,8 +1210,27 @@ function loadKPIs() {
 
 // === NAVIGATE TO PAGE ===
 function navigateTo(page) {
-    const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
-    if (navItem) navItem.click();
+    // Hide all pages
+    document.querySelectorAll('.page-section').forEach(p => p.style.display = 'none');
+    // Show target page
+    const target = document.getElementById('page-' + page);
+    if (target) target.style.display = 'block';
+    // Update nav active state
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navItem = document.querySelector('.nav-item[data-page="' + page + '"]');
+    if (navItem) navItem.classList.add('active');
+    // Update title
+    const titles = {command:'Command Center',intake:'Document Intake',recon:'Smart Reconciliation Engine',
+        copilot:'Treasury Copilot',invoices:'AI Invoice Generator',review:'Review Queue',
+        fraud:'Fraud & Anomaly',analytics:'Treasury Analytics',multibiz:'Multi-Business Treasury',
+        messaging:'WhatsApp & Telegram',vault:'Document Vault',reports:'Automated Reports',audit:'Audit Log'};
+    const titleEl = document.querySelector('.page-title');
+    if (titleEl && titles[page]) titleEl.textContent = titles[page];
+    // Auto-load data
+    if (page === 'recon' && typeof loadResults === 'function') loadResults();
+    if (page === 'command' && typeof loadKPIs === 'function') loadKPIs();
+    if (page === 'fraud' && typeof loadAlerts === 'function') loadAlerts();
+}
 }
 
 // === REPORT GRID ===
