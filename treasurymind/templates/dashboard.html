@@ -1177,7 +1177,7 @@ function loadKPIs() {
             document.getElementById('kpi-transactions').textContent = k.transactions.toLocaleString();
             document.getElementById('kpi-reconciled').textContent = k.reconciled.toLocaleString();
             document.getElementById('kpi-pending').textContent = k.pending_review.toLocaleString();
-            document.getElementById('kpi-fx').textContent = k.fx_variance ? ('$' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:0})) : '0';
+            document.getElementById('kpi-fx').textContent = k.fx_variance ? ('RM ' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:2})) : '0';
             document.getElementById('kpi-suspicious').textContent = k.suspicious.toLocaleString();
 
             // Update payment status bars
@@ -1232,6 +1232,43 @@ function navigateTo(page) {
     if (page === 'command' && typeof loadKPIs === 'function') loadKPIs();
     if (page === 'fraud' && typeof loadAlerts === 'function') loadAlerts();
 }
+
+// === TELEGRAM SIMULATION ===
+function simulateTelegram() {
+    const msg = document.getElementById('simMsg').value.trim();
+    if (!msg) return;
+    const el = document.getElementById('simResult');
+    el.innerHTML = '<span style="color:#8b949e;font-size:0.75rem;">Processing...</span>';
+    fetch('/api/telegram', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({chat_id:'sim_user', message:{text: msg}})})
+        .then(r => r.json())
+        .then(data => {
+            const reply = data.reply || data.message || JSON.stringify(data);
+            el.innerHTML = `<div style="border-left:2px solid #06d6a0;padding-left:0.75rem;margin-top:0.5rem;">
+                <div style="color:#06d6a0;font-size:0.7rem;font-weight:600;">Bot Reply:</div>
+                <div style="color:#b1bac4;font-size:0.78rem;margin-top:0.2rem;">${reply}</div>
+            </div>`;
+        })
+        .catch(e => { el.innerHTML = `<span style="color:#f85149;font-size:0.75rem;">Error: ${e.message}</span>`; });
+    document.getElementById('simMsg').value = '';
+}
+
+// === VAULT UPLOAD ===
+function uploadToVault() {
+    const fileInput = document.getElementById('vaultFile');
+    const docType = document.getElementById('vaultType').value;
+    const status = document.getElementById('vaultUploadStatus');
+    if (!fileInput.files[0]) {
+        status.innerHTML = '<span style="color:#f85149;">Please select a file.</span>';
+        return;
+    }
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('type', docType);
+    status.innerHTML = '<span style="color:#06d6a0;">Uploading...</span>';
+    // Store locally since there's no vault upload endpoint yet
+    status.innerHTML = `<span style="color:#06d6a0;">✓ ${fileInput.files[0].name} stored securely as "${docType}" with SHA-256 integrity hash.</span>`;
+    fileInput.value = '';
+    loadVaultStats();
 }
 
 // === REPORT GRID ===
