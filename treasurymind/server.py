@@ -154,6 +154,23 @@ def api_reconcile():
     for f in files:
         if f.filename.lower().endswith(".pdf"):
             invoice_data.extend(ocr.extract_from_pdf(f))
+        elif f.filename.lower().endswith((".xlsx", ".xls", ".csv")):
+            # Parse Excel/CSV as invoice data
+            import pandas as pd
+            try:
+                df = pd.read_excel(f, engine="openpyxl")
+                for _, row in df.iterrows():
+                    invoice_data.append({
+                        "reference": str(row.get("reference", row.get("Reference", ""))),
+                        "payer": str(row.get("payer", row.get("Payer", row.get("client", "")))),
+                        "amount": float(row.get("amount", row.get("Amount", row.get("total", 0)))),
+                        "currency": str(row.get("currency", row.get("Currency", "MYR"))),
+                        "date": str(row.get("date", row.get("Date", ""))),
+                        "due_date": str(row.get("due_date", row.get("Due Date", ""))),
+                        "status": str(row.get("status", "pending")),
+                    })
+            except Exception as e:
+                invoice_data.append({"error": str(e)})
         else:
             invoice_data.append(ocr.extract_from_image(f))
 
