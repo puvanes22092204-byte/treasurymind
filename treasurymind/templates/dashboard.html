@@ -116,12 +116,6 @@
             <div class="mc-value" id="kpi-suspicious">0</div>
             <div class="mc-delta down"></div>
         </div>
-        <div class="metric-card">
-            <div class="mc-top"><span class="mc-label">Cash Flow</span>
-                <div class="mc-icon green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div></div>
-            <div class="mc-value" id="kpi-cashflow">0</div>
-            <div class="mc-delta up"></div>
-        </div>
     </div><!-- end metrics -->
 
     <!-- CHARTS ROW -->
@@ -1184,7 +1178,6 @@ function loadKPIs() {
             document.getElementById('kpi-pending').textContent = k.pending_review.toLocaleString();
             document.getElementById('kpi-fx').textContent = k.fx_variance ? ('$' + Math.abs(k.fx_variance).toLocaleString(undefined,{maximumFractionDigits:0})) : '0';
             document.getElementById('kpi-suspicious').textContent = k.suspicious.toLocaleString();
-            document.getElementById('kpi-cashflow').textContent = k.cash_flow ? ('$' + k.cash_flow.toLocaleString(undefined,{maximumFractionDigits:0})) : '0';
 
             // Update payment status bars
             const total = k.transactions || 1;

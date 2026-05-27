@@ -42,7 +42,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
 .user-role{font-size:0.6rem;color:var(--text-dim);}
 
 /* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:0.9rem;margin-bottom:1.5rem;}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:0.9rem;margin-bottom:1.5rem;}
 .metric-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.15rem;}
 .mc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.45rem;}
 .mc-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);font-weight:500;}
